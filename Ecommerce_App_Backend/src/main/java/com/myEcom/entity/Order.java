@@ -7,6 +7,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
@@ -24,4 +27,6 @@ public class Order {
     private double totalAmount;
     private String billingAddress;
     private Date orderDelivered;
+    @OneToMany(mappedBy = "order")
+    private Set<OrderItem> orderItems=new HashSet<>();
 }
