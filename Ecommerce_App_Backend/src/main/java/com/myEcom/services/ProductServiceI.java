@@ -8,7 +8,7 @@ import java.util.List;
 public interface ProductServiceI {
 
     public ProductDto createProduct(ProductDto productDto, int categoryId);
-    public ProductResponse getAllProducts(int pageNumber, int pageSize);
+    public ProductResponse getAllProducts(int pageNumber, int pageSize, String sortBy, String sortDir);
 //    public ProductResponse getProducts(int pageNumber, int pageSize, String sortBy, String sortDirection);
 //    public ProductResponse getProductsByCategory(int categoryId, int pageNumber, int pageSize);
     public ProductDto getSingleProduct(int productId);

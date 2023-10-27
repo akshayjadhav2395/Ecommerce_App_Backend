@@ -1,6 +1,7 @@
 package com.myEcom.controller;
 
 import com.myEcom.payload.ApiResponse;
+import com.myEcom.payload.AppConstants;
 import com.myEcom.payload.ProductDto;
 import com.myEcom.payload.ProductResponse;
 import com.myEcom.services.serviceImpl.ProductServiceImpl;
@@ -27,11 +28,13 @@ public class ProductController {
 
     @GetMapping("/product")
     public ResponseEntity<ProductResponse> getProducts(
-            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
-            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize
+            @RequestParam(value = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER_STRING, required = false) int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.PAGE_SIZE_STRING, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY_STRING, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.SORT_DIR_STRING, required = false) String sortDir
     )
     {
-        ProductResponse allProducts = this.productService.getAllProducts(pageNumber, pageSize);
+        ProductResponse allProducts = this.productService.getAllProducts(pageNumber, pageSize, sortBy, sortDir);
         return new ResponseEntity<ProductResponse>(allProducts, HttpStatus.OK);
     }
 
@@ -58,8 +61,8 @@ public class ProductController {
 
     @GetMapping("/category/{categoryId}/product")
     public ResponseEntity<ProductResponse> getProductByCategory(
-            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
-            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
+            @RequestParam(value = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER_STRING, required = false) int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.PAGE_SIZE_STRING, required = false) int pageSize,
             @PathVariable int categoryId )
     {
         ProductResponse productsByCategory = this.productService.getProductsByCategory(categoryId, pageNumber, pageSize);
