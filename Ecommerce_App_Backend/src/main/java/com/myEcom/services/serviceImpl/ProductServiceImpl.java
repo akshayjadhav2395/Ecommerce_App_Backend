@@ -2,8 +2,10 @@ package com.myEcom.services.serviceImpl;
 
 
 import com.myEcom.Exceptions.ResourceNotFoundException;
+import com.myEcom.entity.Category;
 import com.myEcom.entity.Product;
 import com.myEcom.payload.ProductDto;
+import com.myEcom.payload.ProductResponse;
 import com.myEcom.repository.CategoryRepository;
 import com.myEcom.repository.ProductRepository;
 import com.myEcom.services.ProductServiceI;
@@ -12,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,24 +26,41 @@ public class ProductServiceImpl implements ProductServiceI {
     private ProductRepository productRepository;
 
     @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Override
-    public ProductDto createProduct(ProductDto productDto) {
+    public ProductDto createProduct(ProductDto productDto, int categoryId) {
 
         Product product = this.modelMapper.map(productDto, Product.class);
+
+        Category category = this.categoryRepository.findById(categoryId).orElseThrow(()-> new ResourceNotFoundException("Given category "+categoryId+"not found"));
+        product.setCategory(category);
         Product savedProduct = productRepository.save(product);
         return this.modelMapper.map(savedProduct, ProductDto.class);
     }
 
     @Override
-    public List<ProductDto> getAllProducts() {
+    public ProductResponse getAllProducts(int pageNumber, int pageSize) {
 
-        List<Product> productList = productRepository.findAll();
+        Pageable pageable= PageRequest.of(pageNumber, pageSize);
+
+        Page<Product> page = productRepository.findAll(pageable);
+        List<Product> productList = page.getContent();
 
         List<ProductDto> productDtoList = productList.stream().map(product -> modelMapper.map(product, ProductDto.class)).collect(Collectors.toList());
 
-        return productDtoList;
+        ProductResponse productResponse=new ProductResponse();
+        productResponse.setContent(productDtoList);
+        productResponse.setLastPage(page.isLast());
+        productResponse.setPageNumber(page.getNumber());
+        productResponse.setPageSize(page.getSize());
+        productResponse.setTotalPages(page.getTotalPages());
+        productResponse.setTotalElements(page.getTotalElements());
+
+        return productResponse;
     }
 
     @Override
@@ -75,6 +93,28 @@ public class ProductServiceImpl implements ProductServiceI {
     public void deleteProduct(int productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product with " + productId + "not found"));
         this.productRepository.delete(product);
+    }
+
+    @Override
+    public ProductResponse getProductsByCategory(int categoryId, int pageNumber, int pageSize) {
+
+        Category category = this.categoryRepository.findById(categoryId).orElseThrow(()-> new ResourceNotFoundException("Given category "+categoryId+"not found"));
+
+        Pageable pageable=PageRequest.of(pageNumber, pageSize);
+        Page<Product> page = (Page<Product>) this.productRepository.findByCategory(category, pageable);
+
+        List<Product> productListByCategory=page.getContent();
+        List<ProductDto> productDtoList = productListByCategory.stream().map((productByCategory) -> modelMapper.map(productByCategory, ProductDto.class)).collect(Collectors.toList());
+
+        ProductResponse productResponse=new ProductResponse();
+        productResponse.setContent(productDtoList);
+        productResponse.setLastPage(page.isLast());
+        productResponse.setPageNumber(page.getNumber());
+        productResponse.setPageSize(page.getSize());
+        productResponse.setTotalPages(page.getTotalPages());
+        productResponse.setTotalElements(page.getTotalElements());
+
+        return productResponse;
     }
 
 

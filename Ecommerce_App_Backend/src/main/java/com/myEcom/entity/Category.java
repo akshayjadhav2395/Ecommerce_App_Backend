@@ -20,6 +20,6 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int categoryId;
     private String title;
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Product> products=new HashSet<>();
 }
