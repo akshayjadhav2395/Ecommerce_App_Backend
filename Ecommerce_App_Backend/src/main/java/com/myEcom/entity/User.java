@@ -31,4 +31,6 @@ public class User {
     private Date createAt;
     private String phoneNumber;
     private boolean active;
+    @OneToOne(mappedBy = "user")
+    private Cart cart;
 }

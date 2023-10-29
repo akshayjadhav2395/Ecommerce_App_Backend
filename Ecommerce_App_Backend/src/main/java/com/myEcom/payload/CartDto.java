@@ -17,5 +17,5 @@ public class CartDto {
 
     private int cartId;
     private UserDto user;
-    private Set<CartItemDto> cartItemDto=new HashSet<>();
+    private Set<CartItemDto> cartItems=new HashSet<>();
 }

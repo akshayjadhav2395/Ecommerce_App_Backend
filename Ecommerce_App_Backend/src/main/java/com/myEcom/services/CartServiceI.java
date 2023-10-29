@@ -13,10 +13,10 @@ public interface CartServiceI {
 
     // we'll check the availability of cart if is cart is available then we'll add item to cart,
     // otherwise we'll create cart and add item to it
-    public CartDto addItemToCart(ItemRequest itemRequest, String userName);
+    public CartDto addItemToCart(ItemRequest itemRequest, String username);
 
     //get cart of user
-    public CartDto getCart(String userName);
+    public CartDto getCart(String username);
 
     //remove item from cart
     public CartDto removeItemFromCart(String userName, int productId);
