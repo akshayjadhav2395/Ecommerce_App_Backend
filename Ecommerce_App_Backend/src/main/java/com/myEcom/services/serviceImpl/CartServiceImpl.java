@@ -46,7 +46,7 @@ public class CartServiceImpl implements CartServiceI {
         {
             throw new ResourceNotFoundException("Invalid Quantity...!");
         }
-        
+
         //get the user
         User user = this.userRepository.findByEmail(username).orElseThrow(() -> new ResourceNotFoundException("User with" + username + "not found"));
 

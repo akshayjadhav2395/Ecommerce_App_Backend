@@ -1,25 +1,24 @@
-package com.myEcom.entity;
+package com.myEcom.payload;
 
+import com.myEcom.entity.OrderItem;
+import com.myEcom.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "ecom_order")
-public class Order {
+public class OrderDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private int orderId;
     private String orderStatus;
     private String paymentStatus;
@@ -27,8 +26,7 @@ public class Order {
     private double totalAmount;
     private String billingAddress;
     private Date orderDelivered;
-    @OneToOne
-    private User user;
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private Set<OrderItem> orderItem=new HashSet<>();
+    private UserDto user;
+    private Set<OrderItemDto> orderItem = new HashSet<>();
+
 }
