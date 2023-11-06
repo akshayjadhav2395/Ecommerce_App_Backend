@@ -7,6 +7,7 @@ import com.myEcom.services.serviceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,11 +21,15 @@ public class UserController {
     @Autowired
     private UserServiceI userService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @PostMapping("/")
     public ResponseEntity<UserDto> saveUser(@Valid @RequestBody UserDto userDto)
     {
         userDto.setCreateAt(new Date());
         userDto.setActive(true);
+        userDto.setPassword(this.passwordEncoder.encode(userDto.getPassword()));
         UserDto savedUser = this.userService.createUser(userDto);
         return new ResponseEntity<UserDto>(savedUser, HttpStatus.CREATED);
     }
