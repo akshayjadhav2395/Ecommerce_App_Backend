@@ -1,25 +1,22 @@
-package com.myEcom.entity;
+package com.myEcom.payload;
 
+import com.myEcom.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Role {
+public class RoleDto {
 
-    @Id
     private int id;
     private String name;
-    @ManyToMany
-    private Set<User> users=new HashSet<>();
 
 }
